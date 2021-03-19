@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Navigation from "./components/Navigation/Navigation";
 import { Remarkable } from 'remarkable';
 import RemarkableReactRenderer from 'remarkable-react';
+import { AiOutlineMenu } from 'react-icons/ai'
 import './App.css';
 
 function App() {
@@ -21,12 +22,20 @@ function App() {
           currentView={currentView} 
           setCurrentView={setCurrentView}
           setCurrentURL={setCurrentURL}/>
-        <main style={{overflowY:'scroll'}}>
+        <main>
           {
-            (currentView === 'home' || currentView === '') 
-            ? <Home/>
-            : <Page URL={currentURL}/>
+            collapsed && 
+            <nav className="navbar">
+              <AiOutlineMenu className="hamburger-icon" onClick={() => setCollapsed(!collapsed)}/>
+            </nav>
           }
+          <div className="content">
+            {
+              (currentView === 'home' || currentView === '') 
+              ? <Home/>
+              : <Page URL={currentURL}/>
+            }
+          </div>
         </main>
       </div>
   );
@@ -34,9 +43,9 @@ function App() {
 
 function Home() {
   return (
-    <>
+    <div style={{height:'100%'}}>
       <h1>Jan's Documentation</h1>
-    </>
+    </div>
   );
 }
 function Page({URL}) {
