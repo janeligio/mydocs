@@ -1,8 +1,13 @@
 
-main {
-    color: white;
-    background: var(--blue-1);
+.App {
     display: flex;
+    height: 100vh;
+}
+main {
+    /* color: white;
+    background: var(--blue-1);
+    display: flex; */
+    width: 100%;
 }
 
 /******* SIDEBAR *******/
@@ -43,9 +48,22 @@ a:focus, a:hover {
   }
 /**************/
 
-.markdown-container {
-    background: var(--blue-2);
+main {
+    /* background: var(--blue-2); */
     padding: 1em 2em;
+    font-family: 'Open Sans', sans-serif;
+}
+
+pre {
+    background-color: rgba(119,136,153,0.2);
+    padding: 1em;
+    border-radius: 5px;
+}
+
+p code {
+    background-color: rgba(119,136,153,0.2);
+    padding: 0.2em;
+    border-radius: 5px;
 }
 
 .routes {

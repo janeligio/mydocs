@@ -1,68 +1,61 @@
 import { useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import Navigation from "./components/Navigation/Navigation";
+import { Remarkable } from 'remarkable';
+import RemarkableReactRenderer from 'remarkable-react';
 import './App.css';
 
 function App() {
+  const [currentView, setCurrentView] = useState('home');
+  const [currentURL, setCurrentURL] = useState('');
+  const [collapsed, setCollapsed] = useState(false);
   const ctci = [];
   for(let i=1; i<16; i++) {
     ctci.push(`Interview Questions - ${i}`)
   }
 
-  const ctciLinks = CTCI_DATA.map(data => <li className="link" key={Math.random()}><Link to={`/ctci/${joinString(data.title)}`}>{data.title}</Link></li>);
-  const ctciRoutes = CTCI_DATA.map(data => {
-    return (<Route exact path={`/ctci/${joinString(data.title)}`}>
-      <Page URL={data.URL}/>
-    </Route>);
-  })
   return (
-    <Router>
       <div className="App">
-        <main>
-          <section className="sidebar-container">
-            <div className="sidebar">
-              <h2 className="sidebar-header">Cracking the Coding Interview</h2>
-              <ul className="links-container">
-                {ctciLinks}
-              </ul>
-            </div>
-
-            <div className="sidebar">
-              <h2 className="sidebar-header">Automate the Boring Stuff</h2>
-            </div>
-          </section>
-
-          <div className="routes">
-            <Switch>
-              <Route exact path="/">
-                <h1>Home</h1>
-              </Route>
-              {ctciRoutes}
-            </Switch>
-          </div>
+        <Navigation 
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          currentView={currentView} 
+          setCurrentView={setCurrentView}
+          setCurrentURL={setCurrentURL}/>
+        <main style={{overflowY:'scroll'}}>
+          {
+            (currentView === 'home' || currentView === '') 
+            ? <Home/>
+            : <Page URL={currentURL}/>
+          }
         </main>
       </div>
-    </Router>
   );
 }
 
+function Home() {
+  return (
+    <>
+      <h1>Jan's Documentation</h1>
+    </>
+  );
+}
 function Page({URL}) {
   const [ markdown, setMarkdown ] = useState();
+  const md = new Remarkable();
+  md.renderer = new RemarkableReactRenderer();
+
   useEffect(() => {
     fetch(URL)
       .then(res => res.text())
       .then(data => {
         setMarkdown(data);
       })
+      .catch(err => console.log(err))
   });
 
-  return (<div className="markdown-container"><ReactMarkdown children={markdown}/></div>);
+  return md.render(markdown);
 }
+
 
 const CTCI_DATA = [
   {
@@ -79,9 +72,5 @@ const CTCI_DATA = [
     path: '/ctci/'
   })
 })
-
-function joinString(str) {
-  return str.split(' ').join('-');
-}
 
 export default App;
